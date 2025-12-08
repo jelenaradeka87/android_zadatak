@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidZadatak</string>
+    <string name="live_matches">Mečevi uživo</string>
+    <string name="prematch_offer">Prematch ponuda</string>
+</resources>
