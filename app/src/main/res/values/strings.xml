@@ -2,4 +2,11 @@
     <string name="app_name">AndroidZadatak</string>
     <string name="live_matches">Mečevi uživo</string>
     <string name="prematch_offer">Prematch ponuda</string>
+    <string name="football">Fudbal</string>
+    <string name="basketball">Košarka</string>
+    <string name="volleyball">Odbojka</string>
+    <string name="tennis">Tenis</string>
+    <string name="handball">Rukomet</string>
+    <string name="today">Danas</string>
+    <string name="tomorrow">Sutra</string>
 </resources>

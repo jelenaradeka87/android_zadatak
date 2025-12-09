@@ -12,31 +12,41 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.androidzadatak.ui.theme.AppColors
 
 @Composable
 fun MatchListItem(
-    topLeftIcon1: ImageVector,
-    topLeftText1: String,
-    topLeftIcon2: ImageVector,
-    topLeftText2: String,
-    row1Icon: ImageVector,
-    row1Text: String,
-    row1Number: String,
-    row2Icon: ImageVector,
-    row2Text: String,
-    row2Number: String,
+    leagueIconUrl: String?,
+    leagueName: String,
+    currentTime: String,
+    homeTeamAvatarUrl: String?,
+    homeTeamName: String,
+    homeTeamPoints: String,
+    awayTeamAvatarUrl: String?,
+    awayTeamName: String,
+    awayTeamPoints: String,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val imageLoader = ImageLoader.Builder(context)
+        .components {
+            add(SvgDecoder.Factory())
+        }
+        .build()
     Column(
         modifier = modifier
             .background(color = Color.Black, shape = RoundedCornerShape(12.dp))
@@ -52,25 +62,28 @@ fun MatchListItem(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                topLeftIcon1,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(20.dp)
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(leagueIconUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = leagueName,
+                imageLoader = imageLoader,
+                modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(topLeftText1, color = Color.White, fontSize = 14.sp)
+            Text(leagueName, color = Color.Gray, fontSize = 10.sp)
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Icon(
-                topLeftIcon2,
+            androidx.compose.material3.Icon(
+                Icons.Default.PlayArrow,
                 contentDescription = null,
-                tint = Color.White,
+                tint = Color.Green,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(topLeftText2, color = Color.White, fontSize = 14.sp)
+            Text(currentTime, color = Color.White, fontSize = 14.sp)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -80,19 +93,23 @@ fun MatchListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    row1Icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(18.dp)
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(homeTeamAvatarUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = homeTeamName,
+                    imageLoader = imageLoader,
+                    modifier = Modifier.size(24.dp)
                 )
+
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(row1Text, color = Color.White, fontSize = 14.sp)
+                Text(homeTeamName, color = Color.White, fontSize = 14.sp)
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(row1Number, color = Color.White, fontSize = 14.sp)
+            Text(homeTeamPoints, color = Color.White, fontSize = 14.sp, modifier = Modifier.padding(start = 10.dp))
         }
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -102,19 +119,22 @@ fun MatchListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    row2Icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(18.dp)
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(awayTeamAvatarUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = awayTeamName,
+                    imageLoader = imageLoader,
+                    modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(row2Text, color = Color.White, fontSize = 14.sp)
+                Text(awayTeamName, color = Color.White, fontSize = 14.sp)
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(row2Number, color = Color.White, fontSize = 14.sp)
+            Text(awayTeamPoints, color = Color.White, fontSize = 14.sp,  modifier = Modifier.padding(start = 5.dp))
         }
     }
 }

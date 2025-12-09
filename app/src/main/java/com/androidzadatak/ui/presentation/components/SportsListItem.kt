@@ -8,24 +8,36 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.androidzadatak.ui.theme.AppColors
+import com.androidzadatak.util.TranslationUtil
 
 @Composable
 fun SportsListItem(
-    icon: ImageVector,
+    iconUrl: String?,
     sport: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
+
+    val context = LocalContext.current
+
+    val imageLoader = ImageLoader.Builder(context)
+        .components {
+            add(SvgDecoder.Factory())
+        }
+        .build()
 
     val backgroundColor = if (isSelected) AppColors.yellow else AppColors.unselectedBackground
     val contentColor = if (isSelected) AppColors.selectedContent else AppColors.unselectedContent
@@ -40,17 +52,21 @@ fun SportsListItem(
             .padding(horizontal = if (isSelected) 12.dp else 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = contentColor,
+
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .data(iconUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = sport,
+            imageLoader = imageLoader,
             modifier = Modifier.size(24.dp)
         )
 
         if (isSelected) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = sport,
+                text = TranslationUtil.translate(context, sport),
                 color = contentColor,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.bodyMedium
