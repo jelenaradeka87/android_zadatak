@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.androidzadatak.ui.presentation.navigation.NavGraph
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

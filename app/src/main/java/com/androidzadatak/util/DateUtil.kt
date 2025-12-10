@@ -1,6 +1,7 @@
 package com.androidzadatak.util
 
 import android.content.Context
+import android.util.Log
 import com.androidzadatak.R
 import com.androidzadatak.model.Match
 import java.time.LocalDate
@@ -9,11 +10,32 @@ import java.time.format.DateTimeFormatter
 
 object DateUtil {
 
-    private val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    private val formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    private val formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
     private val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
+    private fun parseDate(dateString: String): LocalDateTime {
+        return try {
+            dateString.toLongOrNull()?.let { millis ->
+                return LocalDateTime.ofInstant(
+                    java.time.Instant.ofEpochMilli(millis),
+                    java.time.ZoneId.systemDefault()
+                )
+            }
+
+            try {
+                LocalDateTime.parse(dateString, formatter1)
+            } catch (_: Exception) {
+                LocalDateTime.parse(dateString, formatter2)
+            }
+
+        } catch (e: Exception) {
+            Log.e("DateUtil", "Failed to parse date: $dateString. Falling back to now.", e)
+            LocalDateTime.now()
+        }
+    }
     fun formatDateLabel(context: Context, dateString: String): String {
-        val matchDateTime = LocalDateTime.parse(dateString, inputFormatter)
+        val matchDateTime = parseDate(dateString)
         val matchDate = matchDateTime.toLocalDate()
         val today = LocalDate.now()
         val tomorrow = today.plusDays(1)
@@ -26,9 +48,11 @@ object DateUtil {
     }
 
     fun getUniqueDates(context: Context, matches: List<Match>): List<Pair<String, String>> {
+        val today = LocalDate.now()
+
         return matches
-            .map { it.date }
-            .map { LocalDateTime.parse(it, inputFormatter).toLocalDate() }
+            .map { parseDate(it.date).toLocalDate() }
+            .filter { it >= today }
             .distinct()
             .sorted()
             .map { date ->
@@ -38,8 +62,13 @@ object DateUtil {
     }
 
     fun getTimeText(matchDateString: String): String {
-        return matchDateString.substring(11, 16)
+        return try {
+            val dateTime = parseDate(matchDateString)
+            dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+        } catch (e: Exception) {
+            Log.e("DateUtil", "Failed to get time from: $matchDateString", e)
+            "--:--"
+        }
     }
-
 }
 

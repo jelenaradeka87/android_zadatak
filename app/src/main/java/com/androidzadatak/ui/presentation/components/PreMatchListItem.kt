@@ -19,19 +19,27 @@ import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.androidzadatak.ui.theme.AppColors
+import java.io.File
 
 @Composable
 fun PreMatchListItem(
     homeTeamAvatar: String,
+    homeTeamAvatarLocalPath: String?,
     homeTeamName: String,
     leagueIcon: String,
+    leagueIconLocalPath: String?,
     leagueName: String,
     dateText: String,
     timeText: String,
     awayTeamAvatar: String,
+    awayTeamAvatarLocalPath: String?,
     awayTeamName: String,
     modifier: Modifier = Modifier
 ) {
+
+    val iconToLoadHomeTeam = homeTeamAvatarLocalPath?.let { File(it) } ?: homeTeamAvatar
+    val iconToLoadAwayTeam = awayTeamAvatarLocalPath?.let { File(it) } ?: awayTeamAvatar
+    val iconToLoadLeagueIcon = leagueIconLocalPath?.let { File(it) } ?: leagueIcon
 
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -59,7 +67,7 @@ fun PreMatchListItem(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context)
-                    .data(homeTeamAvatar)
+                    .data(iconToLoadHomeTeam)
                     .crossfade(true)
                     .build(),
                 contentDescription = "",
@@ -77,7 +85,7 @@ fun PreMatchListItem(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context)
-                    .data(leagueIcon)
+                    .data(iconToLoadLeagueIcon)
                     .crossfade(true)
                     .build(),
                 contentDescription = "",
@@ -99,7 +107,7 @@ fun PreMatchListItem(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context)
-                    .data(awayTeamAvatar)
+                    .data(iconToLoadAwayTeam)
                     .crossfade(true)
                     .build(),
                 contentDescription = "",

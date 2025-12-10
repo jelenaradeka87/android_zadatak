@@ -7,5 +7,6 @@ data class Competition(
     val id: Int,
     val sportId: Int,
     val name: String,
-    val competitionIconUrl: String
+    val competitionIconUrl: String,
+    val competitionIconLocalPath: String? = null,
 )

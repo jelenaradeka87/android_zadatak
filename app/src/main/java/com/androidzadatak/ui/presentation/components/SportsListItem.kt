@@ -22,16 +22,20 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.androidzadatak.ui.theme.AppColors
 import com.androidzadatak.util.TranslationUtil
+import java.io.File
 
 @Composable
 fun SportsListItem(
     iconUrl: String?,
+    localIconPath: String?,
     sport: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
 
     val context = LocalContext.current
+    val iconToLoad = localIconPath?.let { File(it) } ?: iconUrl
+
 
     val imageLoader = ImageLoader.Builder(context)
         .components {
@@ -55,7 +59,7 @@ fun SportsListItem(
 
         AsyncImage(
             model = ImageRequest.Builder(context)
-                .data(iconUrl)
+                .data(iconToLoad)
                 .crossfade(true)
                 .build(),
             contentDescription = sport,

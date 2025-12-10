@@ -12,6 +12,7 @@ object AppColors {
     val selectedContent = Color.Black
     val unselectedBackground = Color(0xFF282d30)
     val lightGrey = Color(0xFFf1f5f9)
+    val green = Color(0xFF0e7877)
     val grey = GreyColor
     val unselectedContent = Color.White
 }

@@ -5,16 +5,16 @@ import com.androidzadatak.R
 
 object TranslationUtil {
 
-    private val sportMap = mapOf(
-        "Football" to R.string.football,
-        "Basketball" to R.string.basketball,
-        "Volleyball" to R.string.volleyball,
-        "Tennis" to R.string.tennis,
-        "Handball" to R.string.handball
-    )
+    fun translate(context: Context, key: String?): String {
+        if (key.isNullOrBlank()) return ""
 
-    fun translate(context: Context, sportName: String): String {
-        val resId = sportMap[sportName]
-        return if (resId != null) context.getString(resId) else sportName
+        return when (key.trim().lowercase()) {
+            "football" -> context.getString(R.string.football)
+            "basketball" -> context.getString(R.string.basketball)
+            "volleyball" -> context.getString(R.string.volleyball)
+            "tennis" -> context.getString(R.string.tennis)
+            "handball" -> context.getString(R.string.handball)
+            else -> key
+        }
     }
 }
